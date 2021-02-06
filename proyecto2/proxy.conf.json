@@ -1,0 +1,17 @@
+{
+  "/invoices": {
+    "target": "http://localhost:8093",
+    "secure": false,
+    "logLeve": "debug"
+  },
+  "/products": {
+    "target": "http://localhost:8091",
+    "secure": false,
+    "logLeve": "debug"
+  },
+  "/customers": {
+    "target": "http://localhost:8092",
+    "secure": false,
+    "logLeve": "debug"
+  }
+}

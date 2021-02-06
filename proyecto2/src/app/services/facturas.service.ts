@@ -6,26 +6,29 @@ import { Factura} from '../model/Factura';
   providedIn: 'root'
 })
 export class FacturasService {
-  API_URI = 'http://localhost:8093/invoices';//cambiar uri por el del microservicio
+  API_URI = '/invoices';//cambiar uri por el del microservicio
   constructor(private http: HttpClient) { }
 
   getFacturas(){
     return this.http.get<Factura[]>(this.API_URI);
   }
 
+
   getFactura(id: number) {
     return this.http.get<Factura>(this.API_URI + '/' + id);
   }
 
-
-
-  addFactura(iditems: number,idFactura:number){
-    return this.http.put(this.API_URI+'/'+iditems+'/factura/'+idFactura, null);
+  createFactura(factura: Factura){
+    console.log(factura);
+    return this.http.post(this.API_URI+'/invoices',factura);
+  }
+  updateFactura(factura: Factura){
+    return this.http.put(this.API_URI+'/invoices/'+factura.id,factura);
   }
 
 
   deleteFactura(id: number){
-    return this.http.delete(this.API_URI+'/'+id);
+    return this.http.delete(this.API_URI+'/invoices'+id);
   }
 
 }

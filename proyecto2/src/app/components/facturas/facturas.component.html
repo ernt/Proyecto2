@@ -28,7 +28,7 @@
         <tbody>
         <tr *ngFor="let factura of facturas">
 
-          <td class="text-center">{{ facturas.id }}</td>
+          <td class="text-center">{{ factura.id }}</td>
           <td class="text-center">{{ factura.description }}</td>
           <td class="text-center">{{ factura.customerId }}</td>
           <td class="text-center">{{ factura.createAt | date : 'dd/MM/yyyy' : 'UTC' }}</td>
@@ -36,7 +36,7 @@
 
           <td class="text-right">
             <button class="btn-dark btn-sm  ">Detalles  </button>
-            <button class="btn-danger btn-sm ">Eliminar </button>
+            <button (click)="deleteFactura(factura.id)" class="btn-danger btn-sm ">Eliminar </button>
 
           </td>
         </tr>
