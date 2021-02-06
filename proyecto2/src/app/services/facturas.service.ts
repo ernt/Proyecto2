@@ -19,29 +19,12 @@ export class FacturasService {
     return this.http.get(this.API_URI + '/' + id);
   }
 
-  getAlumnos(id: number){
-    return this.http.get(this.API_URI+'/'+id+'/alumnos');
+
+
+  addFactura(iditems: number,idFactura:number){
+    return this.http.put(this.API_URI+'/'+iditems+'/alumnos/'+idFactura, null);
   }
 
-  getAlumnosNotEvento(id: number) {
-    return this.http.get(this.API_URI+'/'+id+'/not_alumnos');
-  }
-
-  updateEvento(Factura: Factura){
-    return this.http.put(this.API_URI + '/' + Factura.id, Factura);
-  }
-
-  updateTipoEvento(id: number, idTipoEvento: number) {
-    return this.http.put(this.API_URI + '/' + id + '/tipo_evento', idTipoEvento);
-  }
-
-  addAlumno(idEvento: number,idAlumno:number){
-    return this.http.put(this.API_URI+'/'+idEvento+'/alumnos/'+idAlumno, null);
-  }
-
-  eliminarAlumno(idEvento: number,idAlumno:number){
-    return this.http.delete(this.API_URI+'/'+idEvento+'/alumnos/'+idAlumno);
-  }
 
   deleteFactura(id: number){
     return this.http.delete(this.API_URI+'/'+id);
