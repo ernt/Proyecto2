@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FacturasService {
-  API_URI = '../../assets/invoice.json';
+  API_URI = '../../assets/invoice.json';//cambiar uri por el del microservicio
   constructor(private http: HttpClient) { }
 
   getFacturas(){
@@ -22,7 +22,7 @@ export class FacturasService {
 
 
   addFactura(iditems: number,idFactura:number){
-    return this.http.put(this.API_URI+'/'+iditems+'/alumnos/'+idFactura, null);
+    return this.http.put(this.API_URI+'/'+iditems+'/factura/'+idFactura, null);
   }
 
 
