@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Factura} from '../model/Factura';
-import { catchError } from 'rxjs/internal/operators';
-import { Observable, throwError } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
 export class FacturasService {
-  API_URI = '../../assets/invoice.json';//cambiar uri por el del microservicio
+  API_URI = 'http://localhost:8093/invoices';//cambiar uri por el del microservicio
   constructor(private http: HttpClient) { }
 
   getFacturas(){
-    return this.http.get(this.API_URI);
+    return this.http.get<Factura[]>(this.API_URI);
   }
 
   getFactura(id: number) {
-    return this.http.get(this.API_URI + '/' + id);
+    return this.http.get<Factura>(this.API_URI + '/' + id);
   }
 
 

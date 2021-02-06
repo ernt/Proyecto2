@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Factura} from '../../model/Factura';
+import {Client} from '../../model/Client';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacturasService } from '../../services/facturas.service';
-import listcustomers from '/src/assets/json/customers.json';
-import listinvoices from '/src/assets/json/invoice.json';
-import listproducts from '/src/assets/json/products.json';
+import {ClienteService} from '../../services/cliente.service';
+
 declare var $: any;
 
 
@@ -14,14 +14,39 @@ declare var $: any;
   styleUrls: ['./facturas.component.css']
 })
 export class FacturasComponent implements OnInit {
-  constructor() { }
+  facturas: Factura[] | any;
+  Client: Client[] | any;
+  factura: Factura | any;
+  facturaForm!: FormGroup;
+  submitted = false;
+  modalTitle!: string;
+  clienteSelect!: number;
+  constructor(private servicioFactura: FacturasService, private servicioCliente: ClienteService, private formBuilder: FormBuilder) { }
 
-  invoices: any = listinvoices;
 
   ngOnInit(): void {
+    this.facturaForm = this.formBuilder.group({
+      id: [''],
+      numberInvoices: ['', Validators.required],
+      description: ['', Validators.required],
+      customerId: ['', Validators.required],
+      createAt: ['', Validators.required],
+      cliente: [0, Validators.required]
+    });
 
+    this.getFacturas();
   }
-
+  // Consultar lista de Facturas
+  getFacturas(){
+    this.facturas = [];
+    this.servicioFactura.getFacturas().subscribe(
+      res => {
+        this.facturas = res;
+        console.log(this.facturas);
+      },
+      err => console.error(err)
+    )
+  }
 
 
 
