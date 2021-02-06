@@ -10,23 +10,27 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/shared/navbar/navbar.component';
 import { HomeComponent } from './components/home/home.component';
-import { ItemsComponent } from './components/items/items.component';
 import { FacturasComponent } from './components/facturas/facturas.component';
 import { CarritoComponent } from './components/carrito/carrito.component';
+import {HttpClientModule} from "@angular/common/http";
+import { FooterComponent } from './components/shared/footer/footer.component';
+import { ProductsComponent } from './components/products/products.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     HomeComponent,
-    ItemsComponent,
     FacturasComponent,
     CarritoComponent,
-    
+    FooterComponent,
+    ProductsComponent,
+
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

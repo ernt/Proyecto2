@@ -1,1 +1,62 @@
-<p>{{Facturas}}</p>
+<div class=" container-lg animated fast fadeIn">
+  <div class="modal" id="facturaModal">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">asdas</h4>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+<div class="container-fluid">
+  <div class="card mb-3 ">
+    <!-- Header  -->
+    <div class="card-header">
+
+
+      <button style="float: right;" type="button" class="btn btn-info btn-sm"> Agregar Factura <i class="fas fa-id-card"></i>
+      </button>
+    </div>
+
+    <!-- Body  -->
+    <div class="card-body">
+      <table class="table table-responsive-lg">
+        <thead class="thead-dark">
+        <tr>
+          <th class="text-center">ID</th>
+          <th class="text-center">Descripcion</th>
+          <th class="text-center">ID de cliente</th>
+          <th class="text-center">Fecha de Facturacion</th>
+
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let invoice of invoices">
+          <td class="text-center"><span *ngFor="let item of invoice.items">{{item.id}}</span></td>
+
+          <td class="text-center">{{ invoice.id }}</td>
+          <td class="text-center">{{ invoice.description }}</td>
+          <td class="text-center">{{ invoice.customerId }}</td>
+          <td class="text-center">{{ invoice.createAt | date : 'dd/MM/yyyy' : 'UTC' }}</td>
+
+
+          <td class="text-right">
+            <button class="btn-dark btn-sm  ">Detalles  </button>
+            <button class="btn-danger btn-sm ">Eliminar </button>
+
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
