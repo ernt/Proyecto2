@@ -6,7 +6,7 @@ import { FacturasService } from '../../services/facturas.service';
 import {ClienteService} from '../../services/cliente.service';
 import Swal from 'sweetalert2';
 import { Cards } from 'src/app/model/Cards';
-import { Products } from 'src/app/model/Products';
+import { Product } from 'src/app/model/Product';
 import { ProductsService } from 'src/app/services/products.service';
 import { Items } from 'src/app/model/Items';
 
@@ -26,10 +26,10 @@ export class FacturasComponent implements OnInit {
   cards: Cards[] | any
   items:Items[]|any;
   card: Cards | any
-  products:Products[]|any;
+  products:Product[]|any;
   productsAgregados:number[]|any;
   tipoPago!: String;
-  product:Products|any;
+  product:Product|any;
   facturaForm!: FormGroup;
   submitted = false;
   modalTitle!: string;
@@ -65,7 +65,7 @@ export class FacturasComponent implements OnInit {
       err => console.error(err)
     )
   }
- 
+
   agregarItem(){
      const ite=new Items(1,this.cantidad,this.product.price,this.product.id,this.cantidad*this.product.price,this.product);
      this.items.push(ite);
@@ -87,7 +87,7 @@ export class FacturasComponent implements OnInit {
     )
   }
 
-  selectProduct(id:Products){
+  selectProduct(id:Product){
     this.product=id;
     $("#selectproductsModal").modal("show");
   }

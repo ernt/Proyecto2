@@ -1,4 +1,4 @@
-import {Products} from './Products';
+import {Product} from './Product';
 
 export  class Items{
    id: number;
@@ -6,9 +6,9 @@ export  class Items{
   price: number;
   productId: number;
   subTotal: number;
-  product: Products;
+  product: Product;
 
-  constructor(id: number, quantity: number, price: number, productId: number, subTotal: number, product: Products) {
+  constructor(id: number, quantity: number, price: number, productId: number, subTotal: number, product: Product) {
   this.id = id;
   this.quantity = quantity;
   this.price = price;

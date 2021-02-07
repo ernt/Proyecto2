@@ -1,5 +1,5 @@
-import {Items} from "./Items";
-import {Client} from "./Client";
+import {Items} from './Items';
+import {Client} from './Client';
 
 export class Factura {
     id: number;
