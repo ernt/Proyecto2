@@ -7,11 +7,11 @@ export class Factura {
     description: string;
     customerId: number;
     createAt: Date;
-    items: Items;
+    items: Items[];
     state: string;
     customer: Client;
   // tslint:disable-next-line:max-line-length
-    constructor(id: number, numberInvoice: number, description: string, customerId: number, createAt: Date, items: Items, state: string, customer: Client){
+    constructor(id: number, numberInvoice: number, description: string, customerId: number, createAt: Date, items: Items[], state: string, customer: Client){
     this.id = id;
     this.numberInvoice = numberInvoice;
     this.description = description;

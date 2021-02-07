@@ -1,9 +1,20 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Client } from '../model/Client';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
+  API_URI = '/customers';
+  constructor(private http: HttpClient) { }
 
-  constructor() { }
+  getClientes(){
+    return this.http.get<Client[]>(this.API_URI);
+  }
+
+  getCliente(id: number){
+    return this.http.get<Client[]>(this.API_URI + '/' + id);
+  }
 }

@@ -5,6 +5,10 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacturasService } from '../../services/facturas.service';
 import {ClienteService} from '../../services/cliente.service';
 import Swal from 'sweetalert2';
+import { Cards } from 'src/app/model/Cards';
+import { Products } from 'src/app/model/Products';
+import { ProductsService } from 'src/app/services/products.service';
+import { Items } from 'src/app/model/Items';
 
 declare var $: any;
 
@@ -16,13 +20,23 @@ declare var $: any;
 })
 export class FacturasComponent implements OnInit {
   facturas: Factura[] | any;
-  Client: Client[] | any;
+  client: Client[] | any;
   factura: Factura | any;
+  cliente: Client | any;
+  cards: Cards[] | any
+  items:Items[]|any;
+  card: Cards | any
+  products:Products[]|any;
+  productsAgregados:number[]|any;
+  tipoPago!: String;
+  product:Products|any;
   facturaForm!: FormGroup;
   submitted = false;
   modalTitle!: string;
   clienteSelect!: number;
-  constructor(private servicioFactura: FacturasService, private servicioCliente: ClienteService, private formBuilder: FormBuilder) { }
+  cantidad!:number;
+  idProdtuc!:number;
+  constructor(private servicioFactura: FacturasService,private servicioProducto: ProductsService, private servicioCliente: ClienteService, private formBuilder: FormBuilder) { }
 
 
   ngOnInit(): void {
@@ -45,7 +59,102 @@ export class FacturasComponent implements OnInit {
     this.servicioFactura.getFacturas().subscribe(
       res => {
         this.facturas = res;
+        console.log('facturas');
         console.log(this.facturas);
+      },
+      err => console.error(err)
+    )
+  }
+ 
+  agregarItem(){
+     const ite=new Items(1,this.cantidad,this.product.price,this.product.id,this.cantidad*this.product.price,this.product);
+     this.items.push(ite);
+     this.productsAgregados.push(this.product.id);
+     this.product=null;
+     this.cantidad=0;
+     this.getProductos();
+     $("#selectproductsModal").modal("hide");
+  }
+
+  create(){
+     const factura=new Factura(1,123,"descripcion",this.cliente,new Date(),this.items,"CREATED",this.cliente);
+     this.servicioFactura.createFactura(factura).subscribe(
+      res => {
+        this.canceledCreate();
+        console.log(factura);
+      },
+      err => console.error(err)
+    )
+  }
+
+  selectProduct(id:Products){
+    this.product=id;
+    $("#selectproductsModal").modal("show");
+  }
+
+  selectCard(card:Cards){
+    this.items=[];
+    this.products=[];
+    this.servicioProducto.getProducts().subscribe(
+      res => {
+        this.products = res;
+        console.log(this.products);
+        this.card=card;
+        $("#productsModal").modal("show");
+      },
+      err => console.error(err)
+    )
+  }
+
+  cerrarModal(){
+    $("#selectproductsModal").modal("hide");
+  }
+
+  getProductos(){
+    const result =  this.products.filter((produc: { id: any; }) => this.productsAgregados.includes(produc.id) );
+    this.products=result;
+  }
+
+  canceledCreate(){
+    this.card=null;
+    this.cards=[];
+    this.client=[];
+    this.productsAgregados=[];
+    this.cliente=null;
+    this.tipoPago='';
+    this.cantidad=0;
+    this.product=null;
+  }
+
+    // Consultar lista de Facturas
+    selectCustomer(id:number,tipoPago:number){
+      this.cliente = null;
+
+      this.servicioCliente.getCliente(id).subscribe(
+        res => {
+          this.cliente = res;
+          console.log(this.cliente);
+          $("#customersModal").modal("hide");
+          if (tipoPago===1) {
+            this.tipoPago="Tarjeta";
+            this.cards=this.cliente.cards;
+            $("#cardsModal").modal("show");
+          } else {
+            this.tipoPago="Efectivo";
+            $("#productsModal").modal("show");
+          }
+        },
+        err => console.error(err)
+      )
+    }
+
+  getCustomers(){
+    this.client = [];
+    this.servicioCliente.getClientes().subscribe(
+      res => {
+        this.client = res;
+        console.log(this.client);
+        $("#customersModal").modal("show");
       },
       err => console.error(err)
     )
@@ -76,77 +185,10 @@ export class FacturasComponent implements OnInit {
     });
   }
 
-  // onsubmit(){
-  //   this.submitted = true;
-  //   if(this.facturaform.invalid){
-  //     console.log(this.facturaform.value);
-  //     console.log('formulario inválido');
-  //     return;
-  //   }
-  //   //this.convertimage(this);
-  //   if(this.modaltitle == "registrar"){
-  //     let factura = new factura(
-  //       this.facturaform.controls['id'].value,
-  //       this.facturaform.controls['numberinvoice'].value,
-  //       this.facturaform.controls['description'].value,
-  //       this.facturaform.controls['customerid'].value,
-  //       this.facturaform.controls['createat'].value
-  //     )
-  //     console.log(this.facturaform.value);
-  //     this.serviciofactura.createfactura(factura, this.facturaform.controls['customer'].value).subscribe(
-  //       res => {
-  //         swal.fire({
-  //           position: 'top-end',
-  //           icon: 'success',
-  //           title: 'la alumno ha sido registrada',
-  //           showconfirmbutton: false,
-  //           timer: 1500
-  //         })
-  //         $("#facturamodal").modal("hide");
-  //         this.getfacturas();
-  //         this.submitted = false;
-  //         this.clienteselect=0;
-  //       },
-  //       err => console.error(err)
-  //     )
-  //   }else{
-  //     console.log(this.facturaform.value);
-  //     let factura = new factura(
-  //       this.facturaform.controls['id'].value,
-  //       this.facturaform.controls['numberinvoice'].value,
-  //       this.facturaform.controls['description'].value,
-  //       this.facturaform.controls['customerid'].value,
-  //       this.facturaform.controls['createat'].value,
-  //       this.facturaform.controls['items'].value,
-  //       this.facturaform.controls['state'].value,
-  //       this.facturaform.controls['customer'].value,
-  //     )
-  //     this.serviciofactura.updatefactura(factura).subscribe(
-  //       res => {
-  //         swal.fire({
-  //           position: 'top-end',
-  //           icon: 'success',
-  //           title: 'la alumno ha sido actualizada',
-  //           showconfirmbutton: false,
-  //           timer: 1500
-  //         })
-  //         $("#facturamodal").modal("hide");
-  //         this.getfacturas();
-  //         this.submitted = false;
-  //       },
-  //       err => {
-  //         console.error(err);
-  //         swal.fire({
-  //           icon: 'error',
-  //           title: 'oops...',
-  //           text: 'error al conectar con el servidor'
-  //         })
-  //       }
-  //     )
-  //   }
-  // }
-
-
-
+  openModalClient(){
+    console.log('entra');
+    this.facturaForm.reset();
+    $("#facturaModal").modal("show");
+  }
 
 }
