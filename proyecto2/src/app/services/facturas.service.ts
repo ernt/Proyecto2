@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Factura} from '../model/Factura';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacturasService {
-  API_URI = '/invoices';//cambiar uri por el del microservicio
+  API_URI = 'http://localhost:8080/invoices';//cambiar uri por el del microservicio
   constructor(private http: HttpClient) { }
 
-  getFacturas(){
-    return this.http.get<Factura[]>(this.API_URI);
+  getMostRecentId() {
+    return this.http.get<number | null>(this.API_URI + '/mostRecentId')
   }
 
+  getFacturas(state?: string){
+    const options = state ?
+      { params: new HttpParams().set('state', state) } : {}
+    return this.http.get<Factura[]>(this.API_URI, options);
+  }
 
   getFactura(id: number) {
     return this.http.get<Factura>(this.API_URI + '/' + id);

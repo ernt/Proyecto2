@@ -7,7 +7,7 @@ import { Client } from '../model/Client';
   providedIn: 'root'
 })
 export class ClienteService {
-  API_URI = '/customers';
+  API_URI = 'http://localhost:8080/customers';
   constructor(private http: HttpClient) { }
 
   getClientes(){

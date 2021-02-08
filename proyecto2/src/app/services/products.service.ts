@@ -7,7 +7,7 @@ import {Product} from '../model/Product';
   providedIn: 'root'
 })
 export class ProductsService {
-  API_URI = '/products';//cambiar uri por el del microservicio
+  API_URI = 'http://localhost:8080/products';//cambiar uri por el del microservicio
   constructor(private http: HttpClient) { }
 
   getProducts(){

@@ -5,13 +5,12 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { FacturasService } from '../../services/facturas.service';
 import {ClienteService} from '../../services/cliente.service';
 import Swal from 'sweetalert2';
-import { Cards } from 'src/app/model/Cards';
+import { Card } from 'src/app/model/Card';
 import { Product } from 'src/app/model/Product';
 import { ProductsService } from 'src/app/services/products.service';
-import { Items } from 'src/app/model/Items';
+import { Item } from 'src/app/model/Item';
 
 declare var $: any;
-
 
 @Component({
   selector: 'app-facturas',
@@ -23,19 +22,21 @@ export class FacturasComponent implements OnInit {
   client: Client[] | any;
   factura: Factura | any;
   cliente: Client | any;
-  cards: Cards[] | any
-  items:Items[]|any;
-  card: Cards | any
+  cards: Card[] | any
+  items:Item[]|any;
+  card: Card | any
   products:Product[]|any;
   productsAgregados:number[]|any;
-  tipoPago!: String;
+  tipoPago!: string;
   product:Product|any;
   facturaForm!: FormGroup;
   submitted = false;
   modalTitle!: string;
   clienteSelect!: number;
-  cantidad!:number;
+  cantidad = 1;
   idProdtuc!:number;
+  invoiceNumber?: string | null;
+  mostRecentId?: number | null;
   constructor(private servicioFactura: FacturasService,private servicioProducto: ProductsService, private servicioCliente: ClienteService, private formBuilder: FormBuilder) { }
 
 
@@ -50,40 +51,54 @@ export class FacturasComponent implements OnInit {
       state: ['', Validators.required],
       customer: [0, Validators.required],
     });
-
+    this.productsAgregados=[];
     this.getFacturas();
   }
   // Consultar lista de Facturas
   getFacturas(){
     this.facturas = [];
-    this.servicioFactura.getFacturas().subscribe(
+    this.servicioFactura.getFacturas("CREATED").subscribe(
       res => {
         this.facturas = res;
-        console.log('facturas');
-        console.log(this.facturas);
+        console.log('Facturas', this.facturas);
       },
       err => console.error(err)
     )
   }
 
   agregarItem(){
-     const ite=new Items(1,this.cantidad,this.product.price,this.product.id,this.cantidad*this.product.price,this.product);
+     const ite=new Item(this.cantidad,this.product.price,this.product.id,this.cantidad*this.product.price,this.product);
      this.items.push(ite);
      this.productsAgregados.push(this.product.id);
+     console.log("Item agregado:", ite)
+     console.log(this.items);
      this.product=null;
-     this.cantidad=0;
+     this.cantidad=1;
      this.getProductos();
      $("#selectproductsModal").modal("hide");
   }
 
   create(){
-     const factura=new Factura(1,123,"descripcion",this.cliente,new Date(),this.items,"CREATED",this.cliente);
-     this.servicioFactura.createFactura(factura).subscribe(
+    this.servicioFactura.getMostRecentId().subscribe(
       res => {
-        this.canceledCreate();
-        console.log(factura);
-      },
-      err => console.error(err)
+        this.mostRecentId = res;
+        console.log("Most recent id:", this.mostRecentId)
+        if(this.mostRecentId == null) {
+          var invNum = "F-" + '0'.repeat(9) + '1'
+          
+        } else {
+          var next = this.mostRecentId + 1
+          var l = next.toString()?.length;
+          var invNum = "F-" + '0'.repeat(10 - l) + next.toString()
+        }
+        const factura=new Factura("descripcion",this.cliente.id,new Date(),this.items,this.cliente, this.card, this.tipoPago, undefined, undefined, invNum);
+        this.servicioFactura.createFactura(factura).subscribe(
+          res => {
+            this.canceledCreate();
+          },
+          err => console.error(err)
+        )  
+      }
     )
   }
 
@@ -92,7 +107,7 @@ export class FacturasComponent implements OnInit {
     $("#selectproductsModal").modal("show");
   }
 
-  selectCard(card:Cards){
+  selectCard(card:Card){
     this.items=[];
     this.products=[];
     this.servicioProducto.getProducts().subscribe(
@@ -101,6 +116,7 @@ export class FacturasComponent implements OnInit {
         console.log(this.products);
         this.card=card;
         $("#productsModal").modal("show");
+        $("#cardsModal").modal("hide")
       },
       err => console.error(err)
     )
@@ -111,7 +127,7 @@ export class FacturasComponent implements OnInit {
   }
 
   getProductos(){
-    const result =  this.products.filter((produc: { id: any; }) => this.productsAgregados.includes(produc.id) );
+    const result =  this.products.filter((produc: { id: any; }) => !this.productsAgregados.includes(produc.id) );
     this.products=result;
   }
 
@@ -122,7 +138,7 @@ export class FacturasComponent implements OnInit {
     this.productsAgregados=[];
     this.cliente=null;
     this.tipoPago='';
-    this.cantidad=0;
+    this.cantidad=1;
     this.product=null;
   }
 
@@ -136,11 +152,11 @@ export class FacturasComponent implements OnInit {
           console.log(this.cliente);
           $("#customersModal").modal("hide");
           if (tipoPago===1) {
-            this.tipoPago="Tarjeta";
+            this.tipoPago="tarjeta";
             this.cards=this.cliente.cards;
             $("#cardsModal").modal("show");
           } else {
-            this.tipoPago="Efectivo";
+            this.tipoPago="efectivo";
             $("#productsModal").modal("show");
           }
         },

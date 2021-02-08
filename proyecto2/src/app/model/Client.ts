@@ -1,5 +1,5 @@
 import {Region} from './Region';
-import {Cards} from './Cards';
+import {Card} from './Card';
 
 export class Client {
   id: number;
@@ -9,10 +9,10 @@ export class Client {
   email: string;
   photoUrl: string;
   region: Region;
-  cards: Cards[];
+  cards: Card[];
 
   // tslint:disable-next-line:no-misused-new typedef max-line-length
-  constructor(id: number , numberID: string , fistName: string , lastName: string , email: string , photoUrl:string , region: Region , cards : Cards[]){
+  constructor(id: number , numberID: string , fistName: string , lastName: string , email: string , photoUrl:string , region: Region , cards : Card[]){
     this.id = id;
     this.numberID = numberID;
     this.fistName = fistName;
@@ -21,15 +21,5 @@ export class Client {
     this.photoUrl = photoUrl;
     this.region = region;
     this.cards = cards;
-
-
-
-
-
-
-}
-
-
-
-
+  } 
 }
